@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Physio Nurse — ผ่อนคลายคอ บ่า ไหล่</title>
+<style>
+:root{
+  --pink:#ff7aa8; --pink-d:#e0558c; --pink-l:#ffe6f0; --pink-xl:#fff5f9;
+  --ink:#5c2740; --ink-l:#8a5c72; --card:#ffffff; --ok:#3fbf8f; --warn:#ff9f43;
+  --shadow:0 8px 24px rgba(224,85,140,.16);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,"SF Pro Text","Noto Sans Thai","Sarabun",sans-serif;
+  background:linear-gradient(170deg,#fff0f6 0%,#ffe6f0 40%,#ffeef5 100%);
+  color:var(--ink);min-height:100vh;font-size:17px;line-height:1.6;
+  padding-bottom:40px;
+}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.screen{display:none;animation:fade .35s ease}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:26px;padding:22px;box-shadow:var(--shadow);margin-bottom:16px;border:1px solid #ffe0ec}
+h1,h2,h3{margin:0 0 10px;line-height:1.35}
+h1{font-size:30px;color:var(--pink-d)}
+h2{font-size:22px;color:var(--pink-d)}
+h3{font-size:18px}
+.sub{color:var(--ink-l);font-size:15px;margin:0 0 14px}
+.logo{text-align:center;padding:14px 0 4px}
+.logo .mark{font-size:46px}
+.btn{
+  display:block;width:100%;border:0;border-radius:20px;padding:16px 20px;font-size:18px;font-weight:700;
+  background:linear-gradient(135deg,var(--pink),var(--pink-d));color:#fff;box-shadow:0 6px 16px rgba(224,85,140,.35);
+  cursor:pointer;font-family:inherit;margin-top:10px;transition:.15s
+}
+.btn:active{transform:scale(.97)}
+.btn[disabled]{background:#e9d3dd;color:#fff;box-shadow:none}
+.btn.ghost{background:#fff;color:var(--pink-d);border:2px solid var(--pink);box-shadow:none}
+.btn.sm{padding:11px 14px;font-size:15px;width:auto;display:inline-block;margin:4px 6px 4px 0}
+.btn.gray{background:#f1e4ea;color:var(--ink)}
+input,select,textarea{
+  width:100%;padding:14px 16px;border-radius:16px;border:2px solid #ffd4e4;background:var(--pink-xl);
+  font-size:17px;font-family:inherit;color:var(--ink);margin-bottom:12px;outline:0
+}
+input:focus,textarea:focus,select:focus{border-color:var(--pink)}
+label{font-weight:700;font-size:15px;display:block;margin-bottom:6px}
+.faces{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.face{
+  border:3px solid #ffd4e4;border-radius:22px;padding:14px 10px;text-align:center;background:#fff;cursor:pointer;transition:.18s
+}
+.face:active{transform:scale(.96)}
+.face.sel{border-color:var(--pink-d);background:var(--pink-xl);box-shadow:0 0 0 5px rgba(255,122,168,.18)}
+.face svg{width:76px;height:76px;display:block;margin:0 auto 6px}
+.face b{display:block;font-size:16px}
+.face span{font-size:13px;color:var(--ink-l)}
+.pill{display:inline-block;background:var(--pink-l);color:var(--pink-d);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;margin:0 6px 6px 0}
+.poseart{width:100%;max-width:240px;display:block;margin:0 auto;background:var(--pink-xl);border-radius:20px}
+.stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:700px){.stage{grid-template-columns:1fr}}
+.camBox{position:relative;border-radius:22px;overflow:hidden;background:#2b1420;aspect-ratio:3/4}
+.camBox canvas,.camBox video{width:100%;height:100%;object-fit:cover;display:block}
+.recDot{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.recDot i{width:9px;height:9px;border-radius:50%;background:#ff4757;display:inline-block;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.2}}
+.camBar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{border:2px solid #ffd4e4;background:#fff;border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700;color:var(--pink-d);cursor:pointer}
+.chip.on{background:var(--pink);color:#fff;border-color:var(--pink)}
+.timer{text-align:center;position:relative}
+.timer svg{width:170px;height:170px;transform:rotate(-90deg)}
+.timer .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;color:var(--pink-d)}
+.steps{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+.steps div{width:42px;height:7px;border-radius:999px;background:#ffd9e6}
+.steps div.on{background:var(--pink-d)}
+.benefit{background:var(--pink-xl);border-left:5px solid var(--pink);border-radius:14px;padding:12px 14px;font-size:15px;margin-top:12px}
+.benefit a{color:var(--pink-d)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 8px;border-bottom:1px solid #ffe0ec;text-align:left}
+th{background:var(--pink-xl);color:var(--pink-d)}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.slot{border:2px dashed #ffd4e4;border-radius:14px;padding:8px 4px;font-size:12px;background:#fff}
+.slot.done{border-style:solid;border-color:var(--ok);background:#effaf5;color:#1f7a5c;font-weight:700}
+.rng{width:100%;accent-color:var(--pink-d);height:34px}
+.note{font-size:13px;color:var(--ink-l)}
+.lock{background:#fff4e5;border:2px solid #ffd9a8;color:#8a5a12;border-radius:16px;padding:12px 14px;font-size:15px;margin-bottom:12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
+.link{color:var(--pink-d);font-size:14px;text-decoration:underline;cursor:pointer;display:inline-block;margin-top:10px}
+video.rev{width:100%;border-radius:14px;background:#000}
+.badge{background:var(--ok);color:#fff;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}
+.badge.no{background:#ff6b81}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ 1. LOGIN ============ -->
+<section id="scLogin" class="screen on">
+  <div class="logo"><div class="mark">🌸</div><h1>Physio Nurse</h1>
+    <p class="sub">เว็บแอพประเมินและลดอาการปวดคอ บ่า ไหล่<br>สำหรับนักศึกษาพยาบาลชั้นปีที่ 1</p></div>
+  <div class="card">
+    <h2>เข้าสู่ระบบ</h2>
+    <p class="sub">ลงชื่อด้วยอีเมลครั้งเดียว 
+
+เยี่ยมมากครับ โจทย์นี้ชัดเจนและทำเป็น **Web App ไฟล์เดียว** เปิดบน Safari ของ iPad ได้เลย (เพิ่มไปหน้าจอโฮมได้ด้วย) ผมทำให้ครบทุกฟังก์ชันที่ขอ พร้อม **ภาพประกอบท่าเป็น SVG วาดในโค้ดเอง** (ไม่ต้องโหลดรูปจากเน็ต รูปไม่มีวันเสีย ไม่ติดลิขสิทธิ์) และมี **แหล่งอ้างอิงประโยชน์ของแต่ละท่า**
+
+---
+
+## ภาพรวมระบบ
+
+| หน้า | ทำอะไร |
+|---|---|
+| 1. เข้าสู่ระบบ | กรอกอีเมล + ชื่อ-รหัสนักศึกษา จำไว้ถาวรใน `localStorage` กลับมาวันถัดไปไม่ต้องล็อกอินใหม่ |
+| 2. ความรู้ + ประเมินความปวด | ข้อมูลอาการปวดคอ บ่า ไหล่ / Text Neck + หน้ายิ้ม 5 ระดับ (เลือกได้ 1) |
+| 3. ทำกิจกรรม | 3 ท่าตามระดับ + คำแนะนำ + ประโยชน์ + แหล่งอ้างอิง + จับเวลา + กล้องหน้า/หลัง + ฟิลเตอร์ + อัดวิดีโออัตโนมัติทุกท่า |
+| 4. แบบประเมินหลังทำ | Pain Score 0–10 เทียบก่อน/หลัง + อาการไม่พึงประสงค์ + ความพึงพอใจ |
+| 5. ผลลัพธ์ + ความต่อเนื่อง | บันทึกเวลาเข้า-ออก ตารางติดตาม 4 วัน × 2 ช่วง (12:00–13:00 / 17:00–18:00) |
+| 6. Admin | ใส่รหัสผ่านเพื่อดูวิดีโอทั้งหมด + ตรวจความถูกต้องท่า (ผ่าน/ไม่ผ่าน) + ส่งออก CSV |
+
+**ล็อกช่วงเวลา:** นอกช่วง 12:00–13:00 และ 17:00–18:00 ปุ่มเริ่มจะถูกล็อก (มีโหมดสาธิตสำหรับตอนนำเสนอ/ทดสอบ)
+
+---
+
+## แหล่งอ้างอิงประโยชน์ของท่า (ใช้ในแอป)
+
+| กลุ่มท่า | ประโยชน์ | อ้างอิง |
+|---|---|---|
+| เอียงคอ / ดึงศีรษะ | ยืด upper trapezius & levator scapulae ลดตึงต้นคอ-บ่า | [bangkokhospital](https://www.bangkokhospital.com/th/bangkok/content/neck-shoulder-and-back-exercises-to-relieve-office-syndrome), [dnaphysicaltherapy](https://dnaphysicaltherapy.com/exercises/neck/levator-scapula-stretch/) |
+| ก้มเก็บคาง (Chin tuck) | สร้างความแข็งแรงกล้ามเนื้อคอส่วนลึก (Deep Neck Flexor) แก้คอยื่นหน้า | [bangkokhospital](https://www.bangkokhospital.com/th/bangkok/content/neck-shoulder-and-back-exercises-to-relieve-office-syndrome), [chivacare](https://chivacare.com/th/blog/17/Text-Neck-Syndrome-%EF%BF%BD%EF%BF%BD-%E0%B8%A0%E0%B8%B1%E0%B8%A2%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1%E0%B8%81%E0%B9%89%E0%B8%A1%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2) |
+| ยักไหล่ / หมุนไหล่ | ลดอาการตึงบริเวณบ่าและหัวไหล่ เพิ่มการไหลเวียนเลือด | [samitivejchinatown](https://samitivejchinatown.com/th/health-article/office-syndrome-treatment) |
+| ประสานมือหลัง / กางศอก | เปิดอก แก้ไหล่ห่อ เพิ่มพิสัยข้อต่อกระดูกสันหลังช่วงอก | [vimut](https://www.vimut.com/article/9-stretching-exercises-for-office-syndrome) |
+| เหยียดแขนเหนือศีรษะ / เอียงตัว | ยืดสีข้าง-สะบัก คลาย latissimus & quadratus lumborum | [vimut](https://www.vimut.com/article/9-stretching-exercises-for-office-syndrome) |
+| ข้อมูลโรค | สาเหตุ อาการ การรักษา Office Syndrome / Text Neck | [samitivejchinatown](https://samitivejchinatown.com/th/article/office-syndrome/office-syndrome) |
+
+---
+
+## โค้ดเต็ม (บันทึกเป็น `index.html`)
+
+```html
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Physio Nurse — ผ่อนคลายคอ บ่า ไหล่</title>
+<style>
+:root{
+  --pink:#ff7aa8; --pink-d:#e0558c; --pink-l:#ffe6f0; --pink-xl:#fff5f9;
+  --ink:#5c2740; --ink-l:#8a5c72; --card:#ffffff; --ok:#3fbf8f; --warn:#ff9f43;
+  --shadow:0 8px 24px rgba(224,85,140,.16);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,"SF Pro Text","Noto Sans Thai","Sarabun",sans-serif;
+  background:linear-gradient(170deg,#fff0f6 0%,#ffe6f0 40%,#ffeef5 100%);
+  color:var(--ink);min-height:100vh;font-size:17px;line-height:1.6;
+  padding-bottom:40px;
+}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+.screen{display:none;animation:fade .35s ease}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:26px;padding:22px;box-shadow:var(--shadow);margin-bottom:16px;border:1px solid #ffe0ec}
+h1,h2,h3{margin:0 0 10px;line-height:1.35}
+h1{font-size:30px;color:var(--pink-d)}
+h2{font-size:22px;color:var(--pink-d)}
+h3{font-size:18px}
+.sub{color:var(--ink-l);font-size:15px;margin:0 0 14px}
+.logo{text-align:center;padding:14px 0 4px}
+.logo .mark{font-size:46px}
+.btn{
+  display:block;width:100%;border:0;border-radius:20px;padding:16px 20px;font-size:18px;font-weight:700;
+  background:linear-gradient(135deg,var(--pink),var(--pink-d));color:#fff;box-shadow:0 6px 16px rgba(224,85,140,.35);
+  cursor:pointer;font-family:inherit;margin-top:10px;transition:.15s
+}
+.btn:active{transform:scale(.97)}
+.btn[disabled]{background:#e9d3dd;color:#fff;box-shadow:none}
+.btn.ghost{background:#fff;color:var(--pink-d);border:2px solid var(--pink);box-shadow:none}
+.btn.sm{padding:11px 14px;font-size:15px;width:auto;display:inline-block;margin:4px 6px 4px 0}
+.btn.gray{background:#f1e4ea;color:var(--ink)}
+input,select,textarea{
+  width:100%;padding:14px 16px;border-radius:16px;border:2px solid #ffd4e4;background:var(--pink-xl);
+  font-size:17px;font-family:inherit;color:var(--ink);margin-bottom:12px;outline:0
+}
+input:focus,textarea:focus,select:focus{border-color:var(--pink)}
+label{font-weight:700;font-size:15px;display:block;margin-bottom:6px}
+.faces{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.face{
+  border:3px solid #ffd4e4;border-radius:22px;padding:14px 10px;text-align:center;background:#fff;cursor:pointer;transition:.18s
+}
+.face:active{transform:scale(.96)}
+.face.sel{border-color:var(--pink-d);background:var(--pink-xl);box-shadow:0 0 0 5px rgba(255,122,168,.18)}
+.face svg{width:76px;height:76px;display:block;margin:0 auto 6px}
+.face b{display:block;font-size:16px}
+.face span{font-size:13px;color:var(--ink-l)}
+.pill{display:inline-block;background:var(--pink-l);color:var(--pink-d);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;margin:0 6px 6px 0}
+.poseart{width:100%;max-width:240px;display:block;margin:0 auto;background:var(--pink-xl);border-radius:20px}
+.stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:700px){.stage{grid-template-columns:1fr}}
+.camBox{position:relative;border-radius:22px;overflow:hidden;background:#2b1420;aspect-ratio:3/4}
+.camBox canvas,.camBox video{width:100%;height:100%;object-fit:cover;display:block}
+.recDot{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.recDot i{width:9px;height:9px;border-radius:50%;background:#ff4757;display:inline-block;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.2}}
+.camBar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{border:2px solid #ffd4e4;background:#fff;border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700;color:var(--pink-d);cursor:pointer}
+.chip.on{background:var(--pink);color:#fff;border-color:var(--pink)}
+.timer{text-align:center;position:relative}
+.timer svg{width:170px;height:170px;transform:rotate(-90deg)}
+.timer .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;color:var(--pink-d)}
+.steps{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+.steps div{width:42px;height:7px;border-radius:999px;background:#ffd9e6}
+.steps div.on{background:var(--pink-d)}
+.benefit{background:var(--pink-xl);border-left:5px solid var(--pink);border-radius:14px;padding:12px 14px;font-size:15px;margin-top:12px}
+.benefit a{color:var(--pink-d)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 8px;border-bottom:1px solid #ffe0ec;text-align:left}
+th{background:var(--pink-xl);color:var(--pink-d)}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.slot{border:2px dashed #ffd4e4;border-radius:14px;padding:8px 4px;font-size:12px;background:#fff}
+.slot.done{border-style:solid;border-color:var(--ok);background:#effaf5;color:#1f7a5c;font-weight:700}
+.rng{width:100%;accent-color:var(--pink-d);height:34px}
+.note{font-size:13px;color:var(--ink-l)}
+.lock{background:#fff4e5;border:2px solid #ffd9a8;color:#8a5a12;border-radius:16px;padding:12px 14px;font-size:15px;margin-bottom:12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
+.link{color:var(--pink-d);font-size:14px;text-decoration:underline;cursor:pointer;display:inline-block;margin-top:10px}
+video.rev{width:100%;border-radius:14px;background:#000}
+.badge{background:var(--ok);color:#fff;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}
+.badge.no{background:#ff6b81}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ 1. LOGIN ============ -->
+<section id="scLogin" class="screen on">
+  <div class="logo"><div class="mark">🌸</div><h1>Physio Nurse</h1>
+    <p class="sub">เว็บแอพประเมินและลดอาการปวดคอ บ่า ไหล่<br>สำหรับนักศึกษาพยาบาลชั้นปีที่ 1</p></div>
+  <div class="card">
+    <h2>เข้าสู่ระบบ</h2>
+    <p class="sub">ลงชื่อด้วยอีเมลครั้งเดียว ระบบจะจำไว้ให้ กลับมาทำต่อได้ทุกวัน</p>
+    <label>อีเมล</label>
+    <input id="inEmail" type="email" inputmode="email" autocomplete="email" placeholder="student@email.com">
+    <label>ชื่อ–นามสกุล</label>
+    <input id="inName" type="text" placeholder="เช่น สมหญิง ใจดี">
+    <label>รหัสนักศึกษา</label>
+    <input id="inSid" type="text" inputmode="numeric" placeholder="เช่น 68xxxxxx">
+    <button class="btn" onclick="doLogin()">เข้าสู่ระบบ 💗</button>
+    <div style="text-align:center"><span class="link" onclick="go('scAdminLogin')">สำหรับผู้ดูแลระบบ (Admin)</span></div>
+  </div>
+</section>
+
+<!-- ============ 2. HOME / INFO / PAIN SELECT ============ -->
+<section id="scHome" class="screen">
+  <div class="topbar">
+    <div><b id="hiName"></b><div class="note" id="hiMail"></div></div>
+    <button class="chip" onclick="logout()">ออกจากระบบ</button>
+  </div>
+
+  <div class="card">
+    <h2>รู้จักอาการปวดคอ บ่า ไหล่</h2>
+    <p class="sub">Office Syndrome / Text Neck Syndrome</p>
+    <p><b>เกิดจากอะไร</b><br>การก้มคอเล่นโทรศัพท์หรืออ่านหนังสือนาน ๆ ทำให้คอยื่นไปข้างหน้า ไหล่ยกและห่อโดยไม่รู้ตัว
+    กล้ามเนื้อ <i>upper trapezius</i> และ <i>levator scapulae</i> ต้องทำงานค้างตลอดเวลา จนเกิดการบาดเจ็บซ้ำซาก
+    เป็นจุดกดเจ็บ (Trigger point) และปวดเรื้อรัง</p>
+    <p><b>อาการที่พบบ่อย</b></p>
+    <span class="pill">ปวดตึงต้นคอ บ่า สะบัก</span><span class="pill">ปวดร้าวขึ้นศีรษะ</span>
+    <span class="pill">คอแข็ง หันลำบาก</span><span class="pill">ชาปลายมือ</span><span class="pill">ตาพร่า หูอื้อ</span>
+    <p style="margin-top:12px"><b>ป้องกันได้อย่างไร</b><br>
+    ยกจอ/หนังสือให้อยู่ระดับสายตา · พักสายตาและยืดกล้ามเนื้อทุก 30–60 นาที ·
+    นั่งหลังตรง เก็บคาง · บริหารคอ บ่า ไหล่สม่ำเสมอต่อเนื่อง</p>
+    <div class="benefit">
+      <b>แหล่งข้อมูล</b><br>
+      • <a href="https://samitivejchinatown.com/th/article/office-syndrome/office-syndrome" target="_blank">รพ.สมิติเวช ไชน่าทาวน์ — ออฟฟิศซินโดรม สาเหตุ อาการ วิธีรักษา</a><br>
+      • <a href="https://samitivejchinatown.com/th/health-article/office-syndrome-treatment" target="_blank">รพ.สมิติเวช — 10 วิธีรักษาออฟฟิศซินโดรม</a><br>
+      • <a href="https://www.bangkokhospital.com/th/bangkok/content/neck-shoulder-and-back-exercises-to-relieve-office-syndrome" target="_blank">รพ.กรุงเทพ — บริหารคอ บ่า ไหล่แก้ออฟฟิศซินโดรม</a><br>
+      • <a href="https://chivacare.com/th/blog/17/Text-Neck-Syndrome-%EF%BF%BD%EF%BF%BD-%E0%B8%A0%E0%B8%B1%E0%B8%A2%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1%E0%B8%81%E0%B9%89%E0%B8%A1%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2" target="_blank">Text Neck Syndrome ภัยจากสังคมก้มหน้า</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>วันนี้คุณปวดระดับไหน?</h2>
+    <p class="sub">เลือกได้เพียง 1 ระดับ (Pain Score 0–10) ระบบจะจัดชุดท่าบริหารให้เหมาะกับคุณ</p>
+    <div class="faces" id="faceBox"></div>
+    <div id="lockBox"></div>
+    <button class="btn" id="btnStart" onclick="startSession()" disabled>เริ่มทำกิจกรรม</button>
+  </div>
+
+  <div class="card">
+    <h2>ความต่อเนื่องของคุณ</h2>
+    <p class="sub">เป้าหมาย: ทำวันละ 2 ครั้ง (12:00–13:00 และ 17:00–18:00) ต่อเนื่อง 4 วัน</p>
+    <div id="progBox"></div>
+  </div>
+</section>
+
+<!-- ============ 3. ACTIVITY ============ -->
+<section id="scAct" class="screen">
+  <div class="topbar">
+    <div><b id="actLv"></b><div class="note" id="actClock"></div></div>
+    <button class="chip" onclick="abortSession()">ยกเลิก</button>
+  </div>
+  <div class="steps" id="stepBar"></div>
+  <div class="card">
+    <div class="stage">
+      <div>
+        <h2 id="poseName"></h2>
+        <div id="poseArt"></div>
+        <p id="poseHow" style="margin-top:12px"></p>
+        <div class="benefit" id="poseBen"></div>
+      </div>
+      <div>
+        <div class="camBox">
+          <canvas id="cv"></canvas>
+          <video id="vd" playsinline muted autoplay style="display:none"></video>
+          <div class="recDot" id="recDot" style="display:none"><i></i> กำลังบันทึก</div>
+        </div>
+        <div class="camBar">
+          <button class="chip" onclick="flipCam()">🔄 สลับกล้อง</button>
+          <button class="chip" id="fl0" onclick="setFilter(0)">ไม่ใส่ฟิลเตอร์</button>
+          <button class="chip" id="fl1" onclick="setFilter(1)">✨ หน้าใส</button>
+          <button class="chip" id="fl2" onclick="setFilter(2)">🌸 ชมพูหวาน</button>
+          <button class="chip" id="fl3" onclick="setFilter(3)">☀️ อบอุ่น</button>
+          <button class="chip" id="fl4" onclick="setFilter(4)">🎞️ วินเทจ</button>
+        </div>
+        <div class="timer" style="margin-top:14px">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#ffe0ec" stroke-width="12"/>
+            <circle id="ring" cx="60" cy="60" r="52" fill="none" stroke="#e0558c" stroke-width="12"
+              stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="0"/>
+          </svg>
+          <div class="num" id="tNum">00</div>
+        </div>
+        <button class="btn" id="btnPose" onclick="poseAction()">เริ่มท่านี้ (เปิดกล้อง)</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. ASSESSMENT ============ -->
+<section id="scAssess" class="screen">
+  <div class="card">
+    <h2>แบบประเมินหลังทำกิจกรรม</h2>
+    <p class="sub">ประเมินตามหลัก Numeric Pain Rating Scale (0–10)</p>
+    <label>1. ขณะนี้คุณปวดคอ บ่า ไหล่ ระดับเท่าใด (0 = ไม่ปวด, 10 = ปวดรุนแรงที่สุด)</label>
+    <div style="text-align:center"><div id="afFace"></div><b id="afTxt" style="font-size:20px"></b></div>
+    <input class="rng" id="afPain" type="range" min="0" max="10" value="5" oninput="afUpd()">
+    <label>2. ความตึงของกล้ามเนื้อหลังทำกิจกรรม</label>
+    <select id="afTight"><option>ลดลงชัดเจน</option><option>ลดลงเล็กน้อย</option><option>เท่าเดิม</option><option>ตึงมากขึ้น</option></select>
+    <label>3. มีอาการไม่พึงประสงค์ระหว่างทำหรือไม่</label>
+    <select id="afAdv"><option>ไม่มี</option><option>เวียนศีรษะ</option><option>ชาแขน/มือ</option><option>ปวดมากขึ้น</option><option>อื่น ๆ</option></select>
+    <label>4. ความง่ายในการทำตามท่า</label>
+    <select id="afEase"><option>ทำตามได้ง่ายมาก</option><option>ทำตามได้</option><option>ค่อนข้างยาก</option><option>ยากมาก</option></select>
+    <label>5. ความพึงพอใจต่อกิจกรรม (1–5)</label>
+    <input class="rng" id="afSat" type="range" min="1" max="5" value="5" oninput="document.getElementById('satTxt').textContent=this.value">
+    <div style="text-align:center;font-weight:700" id="satTxt">5</div>
+    <label>6. ข้อเสนอแนะเพิ่มเติม</label>
+    <textarea id="afNote" rows="3" placeholder="(ไม่บังคับ)"></textarea>
+    <button class="btn" onclick="submitAssess()">ส่งแบบประเมิน</button>
+  </div>
+</section>
+
+<!-- ============ 5. DONE ============ -->
+<section id="scDone" class="screen">
+  <div class="card" style="text-align:center">
+    <div style="font-size:64px">🎉</div>
+    <h1>ทำกิจกรรมเสร็จสิ้น</h1>
+    <p class="sub">ขอบคุณที่ดูแลคอ บ่า ไหล่ ของตัวเองนะคะ</p>
+    <div id="doneSum" style="text-align:left"></div>
+    <button class="btn" onclick="go('scHome');renderHome()">กลับหน้าหลัก</button>
+  </div>
+</section>
+
+<!-- ============ 6. ADMIN ============ -->
+<section id="scAdminLogin" class="screen">
+  <div class="card">
+    <h2>เข้าสู่ระบบผู้ดูแล</h2>
+    <label>รหัสผ่าน Admin</label>
+    <input id="admPw" type="password" placeholder="••••••••">
+    <button class="btn" onclick="admLogin()">เข้าสู่ระบบ</button>
+    <button class="btn ghost" onclick="go('scLogin')">ย้อนกลับ</button>
+  </div>
+</section>
+
+<section id="scAdmin" class="screen">
+  <div class="topbar"><h2>แผงผู้ดูแลระบบ</h2><button class="chip" onclick="go('scLogin')">ออก</button></div>
+  <div class="card">
+    <h3>สรุปการเข้าร่วม</h3>
+    <div id="admStat"></div>
+    <button class="btn sm" onclick="exportCSV()">⬇️ ส่งออกข้อมูล CSV</button>
+    <button class="btn sm gray" onclick="wipe()">ล้างข้อมูลทั้งหมด</button>
+  </div>
+  <div class="card"><h3>บันทึกการทำกิจกรรม</h3><div style="overflow:auto"><table id="admTb"></table></div></div>
+  <div class="card"><h3>วิดีโอสำหรับตรวจสอบความถูกต้องของท่า</h3>
+    <p class="note">เฉพาะผู้ดูแลเท่านั้นที่เข้าถึงส่วนนี้ได้</p>
+    <div id="admVid"></div></div>
+</section>
+
+</div>
+<script>
+/* ===================== CONFIG ===================== */
+const ADMIN_PW = "physio2024";          // ← เปลี่ยนรหัสผ่านตรงนี้
+const SLOTS = {A:{h:12,label:"12:00–13:00"}, B:{h:17,label:"17:00–18:00"}};
+const PROGRAM_DAYS = 4;
+let DEMO = false;                        // โหมดสาธิต (ข้ามการล็อกเวลา)
+
+/* ===================== ART (SVG) ===================== */
+const C='#c2185b', C2='#e91e63';
+const HEADC = `<circle cx="100" cy="56" r="24" fill="#ffe3ee" stroke="${C}" stroke-width="3.5"/>
+<circle cx="92" cy="52" r="2.8" fill="${C}"/><circle cx="108" cy="52" r="2.8" fill="${C}"/>
+<path d="M93 64 q7 6 14 0" fill="none" stroke="${C}" stroke-width="2.6" stroke-linecap="round"/>
+<line x1="100" y1="80" x2="100" y2="96" stroke="${C}" stroke-width="6" stroke-linecap="round"/>`;
+const HEADP = `<circle cx="100" cy="56" r="24" fill="#ffe3ee" stroke="${C}" stroke-width="3.5"/>
+<path d="M123 52 l12 7 -12 6" fill="#ffe3ee" stroke="${C}" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="112" cy="50" r="2.8" fill="${C}"/>
+<line x1="100" y1="80" x2="100" y2="96" stroke="${C}" stroke-width="6" stroke-linecap="round"/>`;
+const BODY = `<path d="M100 96 L100 150" stroke="${C}" stroke-width="8" stroke-linecap="round"/>
+<path d="M70 102 L130 102" stroke="${C}" stroke-width="8" stroke-linecap="round"/>
+<path d="M82 150 L118 150" stroke="${C}" stroke-width="8" stroke-linecap="round"/>
+<path d="M90 150 L86 190" stroke="${C}" stroke-width="7" stroke-linecap="round"/>
+<path d="M110 150 L114 190" stroke="${C}" stroke-width="7" stroke-linecap="round"/>`;
+const arm = d=>`<path d="${d}" fill="none" stroke="${C2}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>`;
+const ARMS_DOWN = arm("M70 102 L60 130 L62 158")+arm("M130 102 L140 130 L138 158");
+const head = (t=0,profile=false)=>`<g transform="rotate(${t} 100 96)">${profile?HEADP:HEADC}</g>`;
+const headAnim = (a,b,profile=false)=>`<g>${profile?HEADP:HEADC}
+<animateTransform attributeName="transform" type="rotate" values="${a} 100 96;${b} 100 96;${a} 100 96" dur="3s" repeatCount="indefinite"/></g>`;
+const arrow = (d,txt='')=>`<path d="${d}" fill="none" stroke="#ff9ec4" stroke-width="4" stroke-linecap="round" marker-end="url(#ah)"/>`;
+const DEFS = `<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto">
+<path d="M0 0 L9 4.5 L0 9 z" fill="#ff9ec4"/></marker></defs>`;
+const art = inner=>`<svg class="poseart" viewBox="0 0 200 200">${DEFS}${inner}</svg>`;
+
+/* ===================== POSES ===================== */
+const SRC = {
+ bkk:['รพ.กรุงเทพ','https://www.bangkokhospital.com/th/bangkok/content/neck-shoulder-and-back-exercises-to-relieve-office-syndrome'],
+ vim:['รพ.วิมุต','https://www.vimut.com/article/9-stretching-exercises-for-office-syndrome'],
+ sam:['รพ.สมิติเวช','https://samitivejchinatown.com/th/health-article/office-syndrome-treatment'],
+ chi:['Text Neck Syndrome','https://chivacare.com/th/blog/17/Text-Neck-Syndrome-%EF%BF%BD%EF%BF%BD-%E0%B8%A0%E0%B8%B1%E0%B8%A2%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%AA%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%A1%E0%B8%81%E0%B9%89%E0%B8%A1%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2'],
+ dna:['DNA Physical Therapy','https://dnaphysicaltherapy.com/exercises/neck/levator-scapula-stretch/']
+};
+const s=k=>`<a href="${SRC[k][1]}" target="_blank">${SRC[k][0]}</a>`;
+
+const LEVELS=[
+{lv:0,score:"0",title:"ไม่มีอาการปวด",color:"#ffffff",stroke:"#c9c9c9",mouth:"big",
+ poses:[
+  {n:"ท่าที่ 1 • เอียงคอซ้าย–ขวาสลับกัน",sec:30,
+   how:"นั่งหลังตรง ไหล่ผ่อน เอียงศีรษะให้หูเข้าใกล้ไหล่ซ้ายช้า ๆ แล้วสลับไปขวา ทำสลับกันต่อเนื่อง 30 วินาที ห้ามยกไหล่ตาม",
+   ben:"ยืดกล้ามเนื้อ upper trapezius และ scalene ด้านข้างคอ เพิ่มพิสัยการเคลื่อนไหว ลดการเกร็งค้างจากการก้มคอ",
+   src:['bkk','dna'],
+   art:art(ARMS_DOWN+BODY+headAnim(-18,18)+arrow("M150 60 q14 16 0 32"))},
+  {n:"ท่าที่ 2 • ก้มหน้าเก็บคางชิดหน้าอก",sec:30,
+   how:"นั่งหลังตรง ค่อย ๆ ก้มหน้าเก็บคางเข้าหาหน้าอก รู้สึกตึงท้ายทอย ค้างไว้ 30 วินาที หายใจเข้า-ออกช้า ๆ",
+   ben:"ยืดกล้ามเนื้อท้ายทอยและสร้างความแข็งแรงกล้ามเนื้อคอส่วนลึก (Deep Neck Flexor) ช่วยแก้ภาวะคอยื่นไปข้างหน้าจากการเล่นมือถือ",
+   src:['bkk','chi'],
+   art:art(ARMS_DOWN+BODY+head(28,true)+arrow("M150 46 q16 24 -4 44"))},
+  {n:"ท่าที่ 3 • เงยหน้าขึ้นช้า ๆ",sec:30,
+   how:"ค่อย ๆ เงยหน้าขึ้นมองเพดาน ค้างไว้ 30 วินาที ทำช้า ๆ ไม่สะบัดคอ หากเวียนศีรษะให้หยุดทันที",
+   ben:"ยืดกล้ามเนื้อด้านหน้าคอ (sternocleidomastoid) คืนความโค้งปกติของกระดูกคอที่เสียไปจากการก้มนาน",
+   src:['bkk','chi'],
+   art:art(ARMS_DOWN+BODY+head(-25,true)+arrow("M150 86 q16 -24 -4 -44"))}
+ ]},
+{lv:1,score:"1–3",title:"ปวดเล็กน้อย",color:"#8fdcae",stroke:"#3fbf8f",mouth:"small",
+ poses:[
+  {n:"ท่าที่ 1 • เหยียดแขนไขว้ลำตัว",sec:30,
+   how:"เหยียดแขนขวาไปทางซ้ายให้ตรง ใช้มือซ้ายดึงแขนเข้าหาลำตัว ค้าง 15 วินาที แล้วสลับข้างอีก 15 วินาที",
+   ben:"ยืดกล้ามเนื้อหัวไหล่ด้านหลัง (posterior deltoid) และสะบัก ลดอาการตึงหัวไหล่ที่ร้าวมาจากบ่า",
+   src:['vim','sam'],
+   art:art(BODY+arm("M130 102 L104 114 L60 114")+arm("M70 102 L74 128 L92 116")+head(0)+arrow("M150 112 L112 112"))},
+  {n:"ท่าที่ 2 • ยักไหล่ขึ้น–ผ่อนลง",sec:30,
+   how:"ยักไหล่ทั้งสองข้างขึ้นเข้าหาหู ค้าง 2 วินาที แล้วผ่อนลงช้า ๆ ทำสลับต่อเนื่อง 30 วินาที",
+   ben:"กระตุ้นการไหลเวียนเลือดบริเวณบ่า คลายจุดตึงของ upper trapezius ลดความล้าสะสม",
+   src:['sam','vim'],
+   art:art(`<g>${ARMS_DOWN+BODY}<animateTransform attributeName="transform" type="translate" values="0 0;0 -10;0 0" dur="1.8s" repeatCount="indefinite"/></g>`+head(0)+arrow("M156 120 L156 92")+arrow("M44 120 L44 92"))},
+  {n:"ท่าที่ 3 • เอียงคอพร้อมใช้มือช่วยดึง",sec:30,
+   how:"เอียงศีรษะไปทางซ้าย ใช้มือซ้ายวางบนศีรษะด้านขวาช่วยดึงเบา ๆ ค้าง 15 วินาที แล้วสลับข้าง 15 วินาที",
+   ben:"ยืด upper trapezius และ levator scapulae ได้ลึกขึ้น เป็นท่ามาตรฐานลดอาการปวดคอ-บ่าจาก Text Neck",
+   src:['dna','bkk'],
+   art:art(BODY+arm("M70 102 L54 70 L86 44")+arm("M130 102 L140 130 L138 158")+head(-20)+arrow("M152 56 q14 18 2 34"))}
+ ]},
+{lv:2,score:"4–6",title:"ปวดปานกลาง",color:"#ffd95e",stroke:"#e0a800",mouth:"flat",
+ poses:[
+  {n:"ท่าที่ 1 • หมุนไหล่หน้า–หลัง",sec:40,
+   how:"ยกไหล่ทั้งสองข้างขึ้น แล้วหมุนไปด้านหลัง 10 ครั้ง จากนั้นหมุนไปด้านหน้าอีก 10 ครั้ง ทำช้า ๆ เป็นวงกลมใหญ่",
+   ben:"เพิ่มพิสัยข้อไหล่และสะบัก คลายกล้ามเนื้อบ่า-สะบักที่ตึงจากการห่อไหล่ ลดอาการตึงหัวไหล่",
+   src:['sam','vim'],
+   art:art(ARMS_DOWN+BODY+head(0)+
+     `<circle cx="52" cy="98" r="18" fill="none" stroke="#ff9ec4" stroke-width="4" stroke-dasharray="80 20"><animateTransform attributeName="transform" type="rotate" from="0 52 98" to="360 52 98" dur="2.5s" repeatCount="indefinite"/></circle>`+
+     `<circle cx="148" cy="98" r="18" fill="none" stroke="#ff9ec4" stroke-width="4" stroke-dasharray="80 20"><animateTransform attributeName="transform" type="rotate" from="360 148 98" to="0 148 98" dur="2.5s" repeatCount="indefinite"/></circle>`)},
+  {n:"ท่าที่ 2 • ประสานมือด้านหลังแล้วดึงแขนไปหลัง",sec:30,
+   how:"ประสานมือไว้ด้านหลังลำตัว เหยียดศอกตรง ดึงแขนไปด้านหลังพร้อมแอ่นอกขึ้น ค้างไว้ 30 วินาที",
+   ben:"เปิดกล้ามเนื้อหน้าอก (pectoralis) ที่หดสั้นจากไหล่ห่อ และบีบสะบักเข้าหากันเพื่อจัดท่าทางให้ถูกต้อง",
+   src:['vim','bkk'],
+   art:art(BODY+arm("M70 102 L54 136 L96 152")+arm("M130 102 L146 136 L104 152")+head(0)+arrow("M100 176 L100 196")+`<circle cx="100" cy="152" r="7" fill="${C2}"/>`)},
+  {n:"ท่าที่ 3 • ประสานมือท้ายทอย กางศอกเข้า–ออก",sec:30,
+   how:"ประสานมือไว้ที่ท้ายทอย กางศอกออกให้กว้างแล้วหุบเข้าหากัน ทำสลับต่อเนื่อง 30 วินาที หลังตรงตลอด",
+   ben:"เพิ่มการเคลื่อนไหวของกระดูกสันหลังช่วงอกและสะบัก ลดอาการปวดบ่า–สะบักที่เกิดจากนั่งท่าเดิมนาน",
+   src:['vim','sam'],
+   art:art(BODY+`<g>${arm("M70 102 L46 76 L86 60")+arm("M130 102 L154 76 L114 60")}
+     <animateTransform attributeName="transform" type="scale" values="1 1;0.86 1;1 1" additive="sum" dur="2s" repeatCount="indefinite"/>
+     <animateTransform attributeName="transform" type="translate" values="0 0;14 0;0 0" additive="sum" dur="2s" repeatCount="indefinite"/></g>`+head(0))}
+ ]},
+{lv:3,score:"7–9",title:"ปวดมาก",color:"#ffa94d",stroke:"#e8590c",mouth:"frown",
+ poses:[
+  {n:"ท่าที่ 1 • ประสานมือเหยียดเหนือศีรษะ เงยหน้า",sec:30,
+   how:"ประสานมือแล้วเหยียดแขนขึ้นเหนือศีรษะจนสุด หงายฝ่ามือขึ้น เงยศีรษะมองมือ ค้างไว้ 30 วินาที",
+   ben:"ยืดกล้ามเนื้อสีข้าง ไหล่ และหลังส่วนบนพร้อมกัน ช่วยคลายการกดทับของกระดูกสันหลัง ขยายทรวงอกให้หายใจลึกขึ้น",
+   src:['vim','bkk'],
+   art:art(BODY+arm("M70 102 L60 60 L96 24")+arm("M130 102 L140 60 L104 24")+head(-14)+`<circle cx="100" cy="24" r="7" fill="${C2}"/>`+arrow("M100 14 L100 2"))},
+  {n:"ท่าที่ 2 • ประสานมือด้านหลัง เอียงศีรษะซ้าย–ขวา",sec:30,
+   how:"ประสานมือไว้ด้านหลัง เอียงศีรษะไปทางซ้ายค้าง 15 วินาที แล้วเอียงไปทางขวาค้างอีก 15 วินาที",
+   ben:"การล็อกไหล่ไว้ด้านหลังทำให้ยืด upper trapezius ได้ลึกกว่าการเอียงคอธรรมดา เหมาะกับผู้ที่ปวดบ่ามาก",
+   src:['dna','vim'],
+   art:art(BODY+arm("M70 102 L54 136 L96 152")+arm("M130 102 L146 136 L104 152")+headAnim(-20,20))},
+  {n:"ท่าที่ 3 • ประสานมือเหนือศีรษะ เอียงตัวข้าง",sec:30,
+   how:"ประสานมือเหยียดเหนือศีรษะ เอียงลำตัวไปทางขวาค้าง 15 วินาที แล้วเอียงไปทางซ้ายอีก 15 วินาที สะโพกนิ่ง",
+   ben:"ยืดกล้ามเนื้อสีข้างลำตัว (latissimus dorsi, quadratus lumborum) ที่ตึงจากการนั่งอ่านหนังสือนาน ลดอาการปวดร้าวจากบ่าถึงสะบัก",
+   src:['vim','sam'],
+   art:art(`<path d="M82 150 L118 150" stroke="${C}" stroke-width="8" stroke-linecap="round"/>
+     <path d="M90 150 L86 190" stroke="${C}" stroke-width="7" stroke-linecap="round"/>
+     <path d="M110 150 L114 190" stroke="${C}" stroke-width="7" stroke-linecap="round"/>
+     <g><animateTransform attributeName="transform" type="rotate" values="-16 100 150;16 100 150;-16 100 150" dur="4s" repeatCount="indefinite"/>
+     <path d="M100 96 L100 150" stroke="${C}" stroke-width="8" stroke-linecap="round"/>
+     <path d="M70 102 L130 102" stroke="${C}" stroke-width="8" stroke-linecap="round"/>
+     ${arm("M70 102 L60 60 L96 24")+arm("M130 102 L140 60 L104 24")+HEADC}</g>`)}
+ ]},
+{lv:4,score:"10",title:"ปวดรุนแรง",color:"#ff6b6b",stroke:"#d6336c",mouth:"cry",
+ poses:[
+  {n:"ท่าที่ 1 • พนมมือไว้ด้านหลัง",sec:30,
+   how:"นำฝ่ามือสองข้างมาประกบกันไว้กลางหลัง ให้ปลายนิ้วชี้ขึ้น บีบสะบักเข้าหากัน ค้างไว้ 30 วินาที (ทำเท่าที่ไหว)",
+   ben:"เปิดหน้าอกและหมุนหัวไหล่ออกด้านนอก แก้ไหล่ห่อโดยตรง เสริมความแข็งแรงกล้ามเนื้อรอบสะบัก",
+   src:['vim','sam'],
+   art:art(BODY+arm("M70 102 L50 132 L92 138")+arm("M130 102 L150 132 L108 138")+head(0)+
+     `<path d="M94 126 L94 150 M106 126 L106 150" stroke="${C2}" stroke-width="6" stroke-linecap="round"/>`)},
+  {n:"ท่าที่ 2 • ยกแขนพับศอกหลังศีรษะ แล้วกดศอก",sec:30,
+   how:"ยกแขนขวาขึ้นแล้วพับศอกลงไปด้านหลังศีรษะ ใช้มือซ้ายจับศอกขวากดเบา ๆ ค้าง 15 วินาที แล้วสลับข้าง 15 วินาที",
+   ben:"ยืดกล้ามเนื้อไตรเซ็ปส์และ latissimus dorsi คลายความตึงที่ส่งต่อมาถึงหัวไหล่และบ่า",
+   src:['vim','dna'],
+   art:art(BODY+arm("M130 102 L134 52 L104 64")+arm("M70 102 L62 58 L124 46")+head(4)+arrow("M150 40 L134 50"))},
+  {n:"ท่าที่ 3 • แตะไหล่แล้วหมุนหัวไหล่",sec:45,
+   how:"พับแขนทั้งสองข้าง ใช้ปลายนิ้วแตะหัวไหล่ ยกหัวไหล่ขึ้นแล้วหมุนไปข้างหน้า 15 ครั้ง จากนั้นหมุนกลับหลัง 15 ครั้ง",
+   ben:"ท่ามาตรฐานบริหารหัวไหล่ ช่วยลดอาการตึงบริเวณไหล่และหัวไหล่ กระตุ้นการไหลเวียนเลือดในกล้ามเนื้อที่ปวดมาก",
+   src:['sam','bkk'],
+   art:art(BODY+`<g>${arm("M70 102 L50 122 L76 98")+arm("M130 102 L150 122 L124 98")}
+     <animateTransform attributeName="transform" type="rotate" values="0 100 102;12 100 102;0 100 102;-12 100 102;0 100 102" dur="3s" repeatCount="indefinite"/></g>`+head(0)+
+     `<circle cx="78" cy="98" r="16" fill="none" stroke="#ff9ec4" stroke-width="3.5" stroke-dasharray="70 30"><animateTransform attributeName="transform" type="rotate" from="0 78 98" to="360 78 98" dur="2s" repeatCount="indefinite"/></circle>`)}
+ ]}
+];
+
+/* ===================== FACE SVG ===================== */
+function faceSVG(l,size=76){
+ const m={big:'M30 58 q20 22 40 0 q-20 10 -40 0',small:'M34 56 q16 14 32 0',flat:'M34 60 L66 60',
+   frown:'M34 64 q16 -14 32 0',cry:'M34 66 q16 -16 32 0'}[l.mouth];
+ const tears = l.mouth==='cry'?`<path d="M30 46 q-3 10 2 14" stroke="#4aa3ff" stroke-width="4" fill="none" stroke-linecap="round"/>
+   <path d="M70 46 q3 10 -2 14" stroke="#4aa3ff" stroke-width="4" fill="none" stroke-linecap="round"/>`:'';
+ const brow = l.mouth==='frown'||l.mouth==='cry'?`<path d="M26 32 L40 38 M74 32 L60 38" stroke="#5c2740" stroke-width="4" stroke-linecap="round"/>`:'';
+ return `<svg viewBox="0 0 100 100" width="${size}" height="${size}">
+  <circle cx="50" cy="50" r="42" fill="${l.color}" stroke="${l.stroke}" stroke-width="4"/>
+  <circle cx="35" cy="44" r="5" fill="#5c2740"/><circle cx="65" cy="44" r="5" fill="#5c2740"/>
+  ${brow}<path d="${m}" fill="none" stroke="#5c2740" stroke-width="4.5" stroke-linecap="round"/>${tears}</svg>`;
+}
+
+/* ===================== STORAGE ===================== */
+const LS={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},
+          set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+let user=LS.get('pn_user',null), sessions=LS.get('pn_sessions',[]);
+const saveS=()=>LS.set('pn_sessions',sessions);
+
+/* IndexedDB สำหรับวิดีโอ */
+let _db;
+function idb(){return new Promise((res,rej)=>{if(_db)return res(_db);
+  const r=indexedDB.open('physionurse',1);
+  r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('videos'))d.createObjectStore('videos',{keyPath:'id'});};
+  r.onsuccess=e=>{_db=e.target.result;res(_db)};r.onerror=rej;});}
+async function putVideo(o){const d=await idb();return new Promise((res,rej)=>{
+  const t=d.transaction('videos','readwrite');t.objectStore('videos').put(o);t.oncomplete=res;t.onerror=rej;});}
+async function allVideos(){const d=await idb();return new Promise((res,rej)=>{
+  const q=d.transaction('videos','readonly').objectStore('videos').getAll();q.onsuccess=()=>res(q.result);q.onerror=rej;});}
+async function clearVideos(){const d=await idb();return new Promise(res=>{
+  const t=d.transaction('videos','readwrite');t.objectStore('videos').clear();t.oncomplete=res;});}
+
+/* ===================== NAV ===================== */
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
+
+/* ===================== LOGIN ===================== */
+function doLogin(){
+  const e=inEmail.value.trim(), n=inName.value.trim(), sid=inSid.value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return alert('กรุณากรอกอีเมลให้ถูกต้องค่ะ');
+  if(!n)return alert('กรุณากรอกชื่อ-นามสกุลค่ะ');
+  user={email:e,name:n,sid,since:new Date().toISOString()};
+  LS.set('pn_user',user);renderHome();go('scHome');
+}
+function logout(){if(confirm('ออกจากระบบ? ข้อมูลกิจกรรมของคุณยังถูกเก็บไว้'))
+  {localStorage.removeItem('pn_user');user=null;go('scLogin');}}
+
+/* ===================== TIME SLOT ===================== */
+function nowSlot(d=new Date()){const h=d.getHours();if(h===SLOTS.A.h)return 'A';if(h===SLOTS.B.h)return 'B';return null;}
+const dayKey=d=>d.toISOString().slice(0,10);
+const fmt=d=>new Date(d).toLocaleString('th-TH',{dateStyle:'medium',timeStyle:'medium'});
+
+/* ===================== HOME ===================== */
+let pickedLv=null;
+function renderHome(){
+  hiName.textContent='สวัสดีค่ะ คุณ'+user.name+' 💕';
+  hiMail.textContent=user.email+(user.sid?' • '+user.sid:'');
+  faceBox.innerHTML=LEVELS.map(l=>`<div class="face" data-lv="${l.lv}" onclick="pickLv(${l.lv})">
+    ${faceSVG(l)}<b>ระดับ ${l.score}</b><span>${l.title}</span></div>`).join('');
+  pickedLv=null;btnStart.disabled=true;renderLock();renderProg();
+}
+function pickLv(lv){pickedLv=lv;
+  document.querySelectorAll('.face').forEach(f=>f.classList.toggle('sel',+f.dataset.lv===lv));
+  btnStart.disabled=!(canStart()); }
+function canStart(){return pickedLv!==null && (DEMO||nowSlot()!==null);}
+function renderLock(){
+  const sl=nowSlot();
+  if(sl||DEMO){lockBox.innerHTML=`<div class="lock" style="background:#effaf5;border-color:#9ee0c4;color:#1f7a5c">
+    ✅ ขณะนี้อยู่ในช่วงเวลาทำกิจกรรม ${DEMO?'(โหมดสาธิต)':SLOTS[sl].label}</div>`;}
+  else{lockBox.innerHTML=`<div class="lock">⏰ ยังไม่ถึงเวลาทำกิจกรรม<br>
+    ช่วงที่กำหนดคือ <b>12:00–13:00</b> และ <b>17:00–18:00</b> ของทุกวัน
+    <span class="link" onclick="DEMO=true;renderLock();btnStart.disabled=!canStart()">เปิดโหมดสาธิต</span></div>`;}
+}
+function renderProg(){
+  const mine=sessions.filter(s=>s.email===user.email&&s.done);
+  const days=[...new Set(mine.map(s=>s.day))].sort();
+  const start=days[0]||dayKey(new Date());
+  let html='<div class="grid4">';
+  for(let i=0;i<PROGRAM_DAYS;i++){
+    const d=new Date(start);d.setDate(d.getDate()+i);const k=dayKey(d);
+    const a=mine.some(s=>s.day===k&&s.slot==='A'), b=mine.some(s=>s.day===k&&s.slot==='B');
+    html+=`<div><div style="font-size:13px;font-weight:700;margin-bottom:4px">วันที่ ${i+1}<br>
+      <span class="note">${d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</span></div>
+      <div class="slot ${a?'done':''}">12:00<br>${a?'✓':'—'}</div>
+      <div class="slot ${b?'done':''}" style="margin-top:6px">17:00<br>${b?'✓':'—'}</div></div>`;
+  }
+  html+='</div>';
+  const total=mine.length;
+  html+=`<p style="margin-top:12px"><b>ทำไปแล้ว ${total} / ${PROGRAM_DAYS*2} ครั้ง</b>
+    ${total>=PROGRAM_DAYS*2?' 🎊 ครบโปรแกรมแล้ว เก่งมาก!':' สู้ ๆ นะคะ'}</p>`;
+  if(mine.length){
+    html+='<div style="overflow:auto;margin-top:10px"><table><tr><th>เวลาเข้า</th><th>ระดับ</th><th>ปวดก่อน</th><th>ปวดหลัง</th></tr>'+
+      mine.slice(-8).reverse().map(s=>`<tr><td>${fmt(s.start)}</td><td>${s.score}</td><td>${s.painBefore??'-'}</td><td>${s.painAfter??'-'}</td></tr>`).join('')+'</table></div>';
+  }
+  progBox.innerHTML=html;
+}
+
+/* ===================== SESSION / ACTIVITY ===================== */
+let cur=null, idx=0, timerId=null, remain=0, running=false;
+function startSession(){
+  if(!canStart())return;
+  const L=LEVELS[pickedLv];
+  cur={id:'S'+Date.now(),email:user.email,name:user.name,sid:user.sid,lv:L.lv,score:L.score,
+       day:dayKey(new Date()),slot:DEMO?(nowSlot()||'DEMO'):nowSlot(),
+       start:new Date().toISOString(),painBefore:L.lv===0?0:null,poses:[],done:false};
+  idx=0;go('scAct');loadPose();
+}
+function abortSession(){stopTimer();stopCam();cur=null;go('scHome');renderHome();}
+function loadPose(){
+  const L=LEVELS[cur.lv], p=L.poses[idx];
+  actLv.textContent=`ระดับ ${L.score} • ${L.title}`;
+  actClock.textContent='เข้าใช้งานเมื่อ '+fmt(cur.start);
+  stepBar.innerHTML=L.poses.map((_,i)=>`<div class="${i<=idx?'on':''}"></div>`).join('');
+  poseName.textContent=p.n; poseArt.innerHTML=p.art; poseHow.textContent=p.how;
+  poseBen.innerHTML=`<b>ประโยชน์ของท่านี้</b><br>${p.ben}<br>
+    <span class="note">แหล่งอ้างอิง: ${p.src.map(k=>s(k)).join(' · ')}</span>`;
+  remain=p.sec; drawRing(1); tNum.textContent=String(p.sec).padStart(2,'0');
+  btnPose.textContent='เริ่มท่านี้ (เปิดกล้อง)'; btnPose.disabled=false; running=false;
+}
+function drawRing(f){ring.setAttribute('stroke-dashoffset',327*(1-f));}
+function stopTimer(){clearInterval(timerId);timerId=null;}
+
+async function poseAction(){
+  if(running)return;
+  running=true;btnPose.disabled=true;btnPose.textContent='กำลังทำ...';
+  try{ await ensureCam(); startRec(); }catch(e){ alert('ไม่สามารถเปิดกล้องได้: '+e.message+'\nระบบจะจับเวลาต่อโดยไม่บันทึกวิดีโอ'); }
+  const total=LEVELS[cur.lv].poses[idx].sec; remain=total;
+  tNum.textContent=String(remain).padStart(2,'0');
+  timerId=setInterval(async()=>{
+    remain--; tNum.textContent=String(Math.max(remain,0)).padStart(2,'0'); drawRing(remain/total);
+    if(remain<=0){ stopTimer(); await finishPose(); }
+  },1000);
+}
+async function finishPose(){
+  const p=LEVELS[cur.lv].poses[idx];
+  const vid=await stopRec();
+  cur.poses.push({name:p.n,sec:p.sec,at:new Date().toISOString(),videoId:vid});
+  running=false;
+  if(idx<LEVELS[cur.lv].poses.length-1){ idx++; loadPose(); }
+  else{ stopCam(); cur.endAct=new Date().toISOString(); openAssess(); }
+}
+
+/* ===================== CAMERA ===================== */
+let stream=null, facing='user', rec=null, chunks=[], rafId=null, fIdx=0, curVidId=null;
+const FILTERS=[
+ {name:'ไม่ใส่ฟิลเตอร์',css:'none',tint:null},
+ {name:'หน้าใส',css:'brightness(1.12) saturate(1.1) contrast(.96) blur(0.4px)',tint:null},
+ {name:'ชมพูหวาน',css:'brightness(1.08) saturate(1.2)',tint:'rgba(255,140,180,.16)'},
+ {name:'อบอุ่น',css:'sepia(.22) saturate(1.25) brightness(1.06)',tint:'rgba(255,190,120,.12)'},
+ {name:'วินเทจ',css:'sepia(.45) contrast(1.05) brightness(1.02)',tint:'rgba(180,140,100,.14)'}
+];
+function setFilter(i){fIdx=i;for(let k=0;k<5;k++)document.getElementById('fl'+k).classList.toggle('on',k===i);}
+setFilter(0);
+
+async function ensureCam(){
+  if(stream)return;
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:facing,width:{ideal:720},height:{ideal:960}},audio:false});
+  vd.srcObject=stream; await vd.play(); loop();
+}
+function loop(){
+  const ctx=cv.getContext('2d');
+  const draw=()=>{
+    if(vd.videoWidth){
+      if(cv.width!==vd.videoWidth){cv.width=vd.videoWidth;cv.height=vd.videoHeight;}
+      ctx.save();
+      try{ctx.filter=FILTERS[fIdx].css;}catch(e){}
+      if(facing==='user'){ctx.translate(cv.width,0);ctx.scale(-1,1);}
+      ctx.drawImage(vd,0,0,cv.width,cv.height);
+      ctx.restore();
+      const t=FILTERS[fIdx].tint;
+      if(t){ctx.save();ctx.globalCompositeOperation='overlay';ctx.fillStyle=t;ctx.fillRect(0,0,cv.width,cv.height);ctx.restore();}
+    }
+    rafId=requestAnimationFrame(draw);
+  };draw();
+}
+async function flipCam(){
+  facing = facing==='user'?'environment':'user';
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;cancelAnimationFrame(rafId);await ensureCam();}
+}
+function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}cancelAnimationFrame(rafId);}
+function pickMime(){
+  return ['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm']
+    .find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m))||'';
+}
+function startRec(){
+  if(!window.MediaRecorder||!cv.captureStream)return;
+  try{
+    const st=cv.captureStream(24); chunks=[];
+    const mt=pickMime();
+    rec=new MediaRecorder(st,mt?{mimeType:mt,videoBitsPerSecond:1200000}:undefined);
+    rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+    rec.start(1000); recDot.style.display='flex';
+  }catch(e){rec=null;}
+}
+function stopRec(){
+  return new Promise(res=>{
+    recDot.style.display='none';
+    if(!rec||rec.state==='inactive')return res(null);
+    rec.onstop=async()=>{
+      const blob=new Blob(chunks,{type:rec.mimeType||'video/mp4'});
+      const id='V'+Date.now()+Math.random().toString(36).slice(2,6);
+      await putVideo({id,blob,email:user.email,name:user.name,sid:user.sid,
+        pose:LEVELS[cur.lv].poses[idx].n,level:LEVELS[cur.lv].score,
+        at:new Date().toISOString(),sessionId:cur.id,check:'รอตรวจ'});
+      res(id);
+    };
+    rec.stop();
+  });
+}
+
+/* ===================== ASSESSMENT ===================== */
+function openAssess(){afPain.value=5;afUpd();go('scAssess');}
+function afUpd(){
+  const v=+afPain.value, L=LEVELS[v===0?0:v<=3?1:v<=6?2:v<=9?3:4];
+  afFace.innerHTML=faceSVG(L,90);
+  afTxt.textContent=`${v} / 10 — ${L.title}`;
+}
+function submitAssess(){
+  cur.painAfter=+afPain.value;
+  if(cur.painBefore===null){const m={0:0,1:2,2:5,3:8,4:10};cur.painBefore=m[cur.lv];}
+  cur.tight=afTight.value; cur.adverse=afAdv.value; cur.ease=afEase.value;
+  cur.sat=+afSat.value; cur.note=afNote.value.trim();
+  cur.end=new Date().toISOString(); cur.done=true;
+  sessions.push(cur);saveS();
+  const diff=cur.painBefore-cur.painAfter;
+  doneSum.innerHTML=`<table>
+    <tr><th>ผู้ทำกิจกรรม</th><td>${cur.name} (${cur.email})</td></tr>
+    <tr><th>เวลาที่เข้าใช้งาน</th><td>${fmt(cur.start)}</td></tr>
+    <tr><th>เวลาที่ทำเสร็จ</th><td>${fmt(cur.end)}</td></tr>
+    <tr><th>ช่วงเวลา</th><td>${SLOTS[cur.slot]?SLOTS[cur.slot].label:'โหมดสาธิต'}</td></tr>
+    <tr><th>ระดับความปวดที่เลือก</th><td>${cur.score} (${LEVELS[cur.lv].title})</td></tr>
+    <tr><th>จำนวนท่าที่ทำ</th><td>${cur.poses.length} ท่า</td></tr>
+    <tr><th>Pain Score ก่อน → หลัง</th><td><b>${cur.painBefore} → ${cur.painAfter}</b>
+      ${diff>0?`<span class="badge">ลดลง ${diff} ระดับ</span>`:diff<0?`<span class="badge no">เพิ่มขึ้น ${-diff}</span>`:'<span class="pill">เท่าเดิม</span>'}</td></tr>
+    <tr><th>ความตึงกล้ามเนื้อ</th><td>${cur.tight}</td></tr>
+    <tr><th>อาการไม่พึงประสงค์</th><td>${cur.adverse}</td></tr>
+    <tr><th>วิดีโอที่บันทึก</th><td>${cur.poses.filter(p=>p.videoId).length} คลิป (ส่งให้ผู้ดูแลตรวจสอบแล้ว)</td></tr></table>
+    ${cur.adverse!=='ไม่มี'?'<div class="lock" style="margin-top:12px">⚠️ คุณรายงานอาการผิดปกติ หากอาการไม่ดีขึ้นหรือมีอาการชา/อ่อนแรง ควรปรึกษาแพทย์หรือนักกายภาพบำบัดค่ะ</div>':''}`;
+  cur=null;go('scDone');
+}
+
+/* ===================== ADMIN ===================== */
+function admLogin(){ if(admPw.value===ADMIN_PW){admPw.value='';renderAdmin();go('scAdmin');} else alert('รหัสผ่านไม่ถูกต้อง'); }
+async function renderAdmin(){
+  const done=sessions.filter(s=>s.done);
+  const users=[...new Set(done.map(s=>s.email))];
+  const avgB=done.length?(done.reduce((a,s)=>a+ (s.painBefore||0),0)/done.length).toFixed(2):'-';
+  const avgA=done.length?(done.reduce((a,s)=>a+ (s.painAfter||0),0)/done.length).toFixed(2):'-';
+  admStat.innerHTML=`<table>
+    <tr><th>จำนวนผู้เข้าร่วม</th><td>${users.length} คน</td></tr>
+    <tr><th>จำนวนครั้งที่ทำกิจกรรม</th><td>${done.length} ครั้ง</td></tr>
+    <tr><th>ค่าเฉลี่ย Pain Score ก่อน</th><td>${avgB}</td></tr>
+    <tr><th>ค่าเฉลี่ย Pain Score หลัง</th><td>${avgA}</td></tr>
+    <tr><th>ผลต่างเฉลี่ย</th><td><b>${done.length?(avgB-avgA).toFixed(2):'-'}</b></td></tr></table>`;
+  admTb.innerHTML='<tr><th>เวลาเข้า</th><th>ชื่อ</th><th>อีเมล</th><th>ช่วง</th><th>ระดับ</th><th>ก่อน</th><th>หลัง</th><th>ตึง</th><th>ผิดปกติ</th><th>พอใจ</th></tr>'+
+    done.slice().reverse().map(s=>`<tr><td>${fmt(s.start)}</td><td>${s.name}</td><td>${s.email}</td>
+      <td>${SLOTS[s.slot]?SLOTS[s.slot].label:s.slot}</td><td>${s.score}</td><td>${s.painBefore}</td><td>${s.painAfter}</td>
+      <td>${s.tight||'-'}</td><td>${s.adverse||'-'}</td><td>${s.sat||'-'}</td></tr>`).join('');
+  const vids=(await allVideos()).sort((a,b)=>b.at.localeCompare(a.at));
+  admVid.innerHTML = vids.length? vids.map(v=>`<div class="card" style="box-shadow:none;border:1px solid #ffe0ec">
+      <b>${v.name}</b> <span class="note">${v.email}</span><br>
+      <span class="pill">ระดับ ${v.level}</span><span class="pill">${v.pose}</span>
+      <div class="note">${fmt(v.at)}</div>
+      <video class="rev" controls src="${URL.createObjectURL(v.blob)}"></video>
+      <div style="margin-top:8px">สถานะ: <span id="st_${v.id}" class="${v.check==='ท่าถูกต้อง'?'badge':v.check==='ต้องแก้ไข'?'badge no':'pill'}">${v.check}</span>
+      <button class="btn sm" onclick="mark('${v.id}','ท่าถูกต้อง')">✓ ท่าถูกต้อง</button>
+      <button class="btn sm gray" onclick="mark('${v.id}','ต้องแก้ไข')">✗ ต้องแก้ไข</button>
+      <a class="btn sm ghost" download="${v.id}.mp4" href="${URL.createObjectURL(v.blob)}">⬇️ ดาวน์โหลด</a></div></div>`).join('')
+    : '<p class="note">ยังไม่มีวิดีโอ</p>';
+}
+async function mark(id,st){
+  const vs=await allVideos(); const v=vs.find(x=>x.id===id); if(!v)return;
+  v.check=st; await putVideo(v); renderAdmin();
+}
+function exportCSV(){
+  const h=['เวลาเข้า','เวลาเสร็จ','ชื่อ','รหัสนศ.','อีเมล','วันที่','ช่วงเวลา','ระดับ','PainBefore','PainAfter','ผลต่าง','ความตึง','อาการผิดปกติ','ความยากง่าย','ความพึงพอใจ','จำนวนท่า','จำนวนคลิป','หมายเหตุ'];
+  const rows=sessions.filter(s=>s.done).map(s=>[fmt(s.start),fmt(s.end),s.name,s.sid||'',s.email,s.day,
+    SLOTS[s.slot]?SLOTS[s.slot].label:s.slot,s.score,s.painBefore,s.painAfter,s.painBefore-s.painAfter,
+    s.tight,s.adverse,s.ease,s.sat,s.poses.length,s.poses.filter(p=>p.videoId).length,(s.note||'').replace(/[\n,]/g,' ')]);
+  const csv='\uFEFF'+[h,...rows].map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='physionurse_'+dayKey(new Date())+'.csv';a.click();
+}
+async function wipe(){ if(!confirm('ลบข้อมูลและวิดีโอทั้งหมด?'))return;
+  sessions=[];saveS();await clearVideos();renderAdmin(); }
+
+/* ===================== INIT ===================== */
+if(user){renderHome();go('scHome');}
+setInterval(()=>{if(document.getElementById('scHome').classList.contains('on')&&!DEMO){renderLock();btnStart.disabled=!canStart();}},30000);
+</script>
+</body>
+</html>
